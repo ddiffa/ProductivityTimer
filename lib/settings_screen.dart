@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timer_app/settings.dart';
 
 class SettingScreen extends StatelessWidget {
   @override
@@ -6,7 +7,7 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Setting"),),
       body: Container(
-        child: Text('Hello World'),
+        child: Settings() ,
       ),
     );
   }

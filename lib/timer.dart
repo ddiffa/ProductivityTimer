@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'timer_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CountDownTimer {
   double _radius = 1;
@@ -11,26 +12,24 @@ class CountDownTimer {
   int shortBreak = 5;
   int longBreak = 20;
 
-
-  void startBreak(bool isShort){
+  void startBreak(bool isShort) {
     _radius = 1;
-    _time = Duration(
-      minutes: (isShort) ? shortBreak: longBreak,
-      seconds: 0
-    );
+    _time = Duration(minutes: (isShort) ? shortBreak : longBreak, seconds: 0);
     _fullTime = _time;
   }
 
-  void stopTimer(){
+  void stopTimer() {
     this._isActive = false;
   }
 
-  void startTimer(){
-    if(_time.inSeconds > 0){
+  void startTimer() {
+    if (_time.inSeconds > 0) {
       this._isActive = true;
     }
   }
-  void startWork() {
+
+  void startWork() async {
+    await readSettings();
     _radius = 1;
     _time = Duration(minutes: this.work, seconds: 0);
     _fullTime = _time;
@@ -47,8 +46,7 @@ class CountDownTimer {
     return formattedTime;
   }
 
-  Stream<TimerModel> stream() async*{
-
+  Stream<TimerModel> stream() async* {
     //yield* statement to deliver a result. T0 make it simple, it's like a return statement,
     // but it doesn't end the function.
     // You have to use "*" sign after yield because we are returning a Stream.
@@ -56,11 +54,9 @@ class CountDownTimer {
     //yield* Stream.periodic() is a constructor creating a Stream that emits events at the intervals specified
     // in the first parameter. In our code, this will emit a value every 1 second.
     yield* Stream.periodic(Duration(seconds: 1), (int a) {
-
       //We declare a String called time and check whether the _isActive field is true, as follows :
       String time;
-      if(this._isActive){
-
+      if (this._isActive) {
         // If it is, we decrease the value of time by 1 second (it's a countdown, after all), like this:
         _time = _time - Duration(seconds: 1);
 
@@ -70,7 +66,7 @@ class CountDownTimer {
 
         // We check whether the _time field got down to 0 and if it did, we change the value of _isActive to false
         // to stop the countdown, as follows:
-        if(_time.inSeconds <=0){
+        if (_time.inSeconds <= 0) {
           _isActive = false;
         }
       }
@@ -82,5 +78,14 @@ class CountDownTimer {
 
       //So this function returns a Stream of TimerModel, decrementing the duration every second.
     });
+  }
+
+  Future readSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    work = prefs.getInt('workTime') == null ? 30 : prefs.getInt('workTime');
+    shortBreak =
+        prefs.getInt('shortBreak') == null ? 30 : prefs.getInt('shortBreak');
+    longBreak =
+        prefs.getInt('longBreak') == null ? 30 : prefs.getInt('longBreak');
   }
 }
