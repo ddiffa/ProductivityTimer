@@ -1,6 +1,8 @@
-# timer_app
-
-A new Flutter application.
+## Preview
+<img src="https://github.com/ddiffa/ProductivityTimer/blob/master/ss/1.png"
+width="256">&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/ddiffa/ProductivityTimer/blob/master/ss/2.png"
+width="256">&nbsp;&nbsp;&nbsp;
 
 ## Getting Started
 
